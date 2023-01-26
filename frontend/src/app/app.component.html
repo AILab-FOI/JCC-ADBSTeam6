@@ -1,0 +1,120 @@
+<div class="h-screen w-screen flex flex-col">
+  <main class="flex-grow md:flex relative h-full w-full">
+    <div
+      (click)="switchShowNavMenuState()"
+      class="[&>*]:w-8 [&>*]:h-8 md:hidden absolute top-2 left-2 z-50 cursor-pointer"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        *ngIf="showNavMenu"
+        stroke="rgb(209, 213, 219)"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+      <svg
+        *ngIf="!showNavMenu"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="rgb(209, 213, 219)"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+        />
+      </svg>
+    </div>
+    <app-nav-menu
+      class="md:flex md:min-w-fit md:w-1/4 absolute md:relative md:unset h-full w-3/4 z-10"
+      [ngClass]="showNavMenu ? 'flex' : 'hidden'"
+    >
+    </app-nav-menu>
+    <div class="w-full bg-gray-600 h-full">
+      <div class="h-full w-full m-auto relative">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </main>
+  <aside class="absolute top-4 right-4 h-fit overflow-y-hidden">
+    <div *ngFor="let popupObj of popupQueue; index as idx" class="p-1">
+      <app-popup
+        [message]="popupObj.message"
+        (clearPopup)="removeErrorMessage(idx)"
+        [type]="popupObj.type"
+      >
+      </app-popup>
+    </div>
+  </aside>
+  <footer
+    *ngIf="musicPlaying"
+    class="flex justify-between flex-row w-full bg-gray-500"
+  >
+    <div class="w-56">
+      <span *ngIf="currentMusicInfo">
+        {{ currentMusicInfo.title }}
+      </span>
+    </div>
+    <app-music-controller
+      class="w-full"
+      [musicPaused]="musicPaused"
+      [currentTime]="totalDuration"
+      [duration]="currentMusicInfo?.duration | durationToS"
+      (pauseMusic)="pauseMusic()"
+      (playMusic)="playMusic()"
+      (change-time)="updateTime($event)"
+      (next-music)="nextMusic()"
+      (prev-music)="prevMusic()"
+    >
+    </app-music-controller>
+    <div class="w-56 h-fit flex flex-row gap-2 p-2 pr-4 items-center">
+      <div (click)="switchVolumeMutedState()" class="cursor-pointer relative">
+        <svg
+          *ngIf="!volumeMuted"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"
+          />
+        </svg>
+        <svg
+          *ngIf="volumeMuted"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.531V19.94a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.506-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.395C2.806 8.757 3.63 8.25 4.51 8.25H6.75z"
+          />
+        </svg>
+      </div>
+      <app-slide-bar
+        (update)="updateVolume($event)"
+        [progression]="volumeLevel"
+        [progressive-change]="true"
+        class="w-full relative"
+      >
+      </app-slide-bar>
+    </div>
+  </footer>
+</div>
