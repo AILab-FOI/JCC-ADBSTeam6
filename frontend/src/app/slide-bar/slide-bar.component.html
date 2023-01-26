@@ -1,0 +1,24 @@
+<div
+  #slidebar
+  class="relative"
+  (mousedown)="isDragging = true"
+  (mouseup)="isDragging = false"
+  (mousemove)="onMouseMove($event)"
+>
+  <div
+    class="h-3 w-full rounded-r-full absolute translate-y-1/2 shadow-inner right-0 bottom-0"
+    [ngClass]="rightPartColor"
+    [style.width.%]="leftPartWidth"
+  ></div>
+  <div
+    class="h-3 w-full rounded-l-full shadow-inner translate-y-1/2 absolute bottom-0"
+    [ngClass]="leftPartColor"
+    [style.width.%]="rightPartWidth"
+  ></div>
+  <div
+    #circle
+    class="absolute bottom-0 left-0 translate-y-1/2 h-5 w-5 cursor-pointer rounded-full shadow-md"
+    [ngClass]="circleColor"
+    [style.left.%]="bubbleLeftPos"
+  ></div>
+</div>

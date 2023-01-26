@@ -1,0 +1,82 @@
+<div class="p-12 w-full h-full flex flex-col gap-8 [&>*]:w-full text-gray-100">
+  <div>
+    <h1 class="font-bold text-3xl">
+      {{ userInfo?.username }}
+    </h1>
+    <div *ngIf="authService.isLoggedIn() && userInfo && userInfo?.userID !== authService.getUser()?.userID"
+      class="p-2 bg-blue-500 cursor-pointer rounded-lg w-fit mt-2 [&>span]:hover:opacity-100 [&>span]:opacity-90">
+      <span *ngIf="!isSubscribe" (click)="subscribe()">
+        Subscribe
+      </span>
+      <span *ngIf="isSubscribe" (click)="unsubscribe()">
+        Unsuscribe
+      </span>
+    </div>
+  </div>
+  <div *ngIf="userInfo" class="[&>div]:flex [&>div]:flex-col [&>div]:gap-1 flex flex-col gap-3 [&>div>h2]:text-2xl">
+    <div>
+      <h2>
+        Playlists 🔀
+      </h2>
+      <div *ngIf="!loadingPlaylists; else card_skeletons">
+        <div *ngIf="userPlaylists.length > 0; else no_playlist" class="flex flex-row flex-wrap gap-4">
+          <app-card *ngFor="let playlist of userPlaylists" (click)="redirectToPlaylist(playlist.playlistID)"
+            [name]="playlist.name" [description]="playlist.description">
+          </app-card>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2>
+        Subscriptions 👥
+      </h2>
+      <div *ngIf="!loadingSubscriptions; else card_skeletons">
+        <div *ngIf="userSubscriptions.length > 0; else no_subscription" class="flex flex-row flex-wrap gap-4">
+          <app-card *ngFor="let subUser of userSubscriptions" [imgColor]="'bg-green-500'"
+            (click)="redirectToUser(subUser.userID)" [name]="subUser.username">
+          </app-card>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2>
+        Comments 💬
+      </h2>
+      <div *ngIf="userComments.length > 0 || loadingComments; else no_comment" class="flex flex-col gap-4">
+        <app-comment *ngFor="let comment of userComments" [comment]="comment">
+        </app-comment>
+        <app-comment *ngIf="loadingComments">
+        </app-comment>
+        <app-comment *ngIf="loadingComments">
+        </app-comment>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #card_skeletons>
+  <div class="flex flex-row flex-wrap gap-4">
+    <app-skeleton-card></app-skeleton-card>
+    <app-skeleton-card></app-skeleton-card>
+  </div>
+</ng-template>
+
+<ng-template #no_playlist>
+  <span>
+    You don't have any playlists yet ...
+  </span>
+</ng-template>
+
+<ng-template #no_subscription>
+  <span>
+    You don't have any Subscriptions yet ...
+  </span>
+</ng-template>
+
+<ng-template #no_comment>
+  <span>
+    You don't have any comments yet ...
+  </span>
+</ng-template>

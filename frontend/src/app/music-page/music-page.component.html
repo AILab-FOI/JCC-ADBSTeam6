@@ -1,0 +1,138 @@
+<div class="p-12 text-gray-100 flex flex-col gap-6 max-w-4xl m-auto">
+  <div class="py-4 flex flex-row gap-6">
+    <div
+      *ngIf="musicInfo; else music_img"
+      class="w-32 h-32 bg-red-500 font-bold rounded-lg grid place-items-center"
+    >
+      <span class="text-8xl">
+        {{ musicInfo.title[0] | uppercase }}
+      </span>
+    </div>
+    <div class="flex flex-col gap-2">
+      <span *ngIf="musicInfo; else big_line" class="text-4xl">
+        {{ musicInfo.title }}
+      </span>
+      <span *ngIf="musicInfo; else small_line" class="text-xl">
+        By
+        <a
+          class="hover:rounded-lg p-1.5 hover:bg-gray-500 cursor-pointer"
+          *ngFor="let artist of musicInfo.artists"
+          [routerLink]="['/artists', artist.artistID]"
+          >{{ artist.name }}</a
+        >
+      </span>
+      <span *ngIf="musicInfo; else small_line" class="text-xl">
+        In
+        <a
+          class="hover:rounded-lg p-1.5 hover:bg-gray-500 cursor-pointer"
+          *ngFor="let genre of musicInfo.genres"
+          [routerLink]="['/genres/']"
+          [queryParams]="{
+            'select-id': genre.tagID
+          }"
+          >{{ genre.name }}</a
+        >
+      </span>
+    </div>
+  </div>
+
+  <div
+    class="flex flex-row w-full justify-between [&>div]:flex [&>div]:flex-row [&>div]:gap-2 [&>div>div]:w-6 [&>div>div]:h-6 [&>div>div]:grid [&>div>div]:place-items-center"
+  >
+    <div>
+      <div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+          />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+        </svg>
+      </div>
+      <span>
+        {{ views }}
+      </span>
+    </div>
+    <div
+      [ngClass]="{ 'cursor-pointer': authService.isLoggedIn() }"
+      (click)="actionLikeButton()"
+    >
+      <div>
+        <span *ngIf="!isLike"> 🤍 </span>
+        <span *ngIf="isLike"> ❤️ </span>
+      </div>
+      <span>
+        {{ like }}
+      </span>
+    </div>
+  </div>
+
+  <div
+    *ngIf="isOwner"
+    class="py-4 text-center w-full bg-red-600 rounded-lg hover:font-bold cursor-pointer"
+    (click)="deleteMusic()"
+  >
+    <span> Delete music </span>
+  </div>
+
+  <div class="flex flex-col gap-2 md:flex-row">
+    <div
+      class="py-4 text-center w-full bg-blue-600 rounded-lg hover:font-bold cursor-pointer"
+      (click)="playNow()"
+    >
+      <span class="w-full text-xl"> Play now </span>
+    </div>
+
+    <div
+      class="py-4 text-center w-full bg-blue-600 rounded-lg hover:font-bold cursor-pointer"
+      (click)="playAfter()"
+    >
+      <span class="w-full text-xl"> Play after </span>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-4 w-full">
+    <app-comment
+      *ngFor="let comment of comments"
+      [comment]="comment"
+    ></app-comment>
+    <div *ngIf="authService.isLoggedIn()" class="flex flex-col gap-2 w-full">
+      <textarea
+        ngDefaultControl
+        [(ngModel)]="commentContent"
+        class="text-gray-900 rounded-lg outline-none p-2"
+        placeholder="Write some comment about this music ..."
+      ></textarea>
+      <div
+        class="py-2 text-center w-full bg-blue-600 rounded-lg hover:font-bold cursor-pointer"
+        (click)="publishComment()"
+      >
+        <span class="w-full text-md"> Publish </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #music_img>
+  <div class="w-32 h-32 animate-pulse bg-gray-500 rounded-lg"></div>
+</ng-template>
+
+<ng-template #big_line>
+  <div class="w-32 h-6 animate-pulse bg-gray-500 rounded-lg"></div>
+</ng-template>
+
+<ng-template #small_line>
+  <div class="w-48 h-4 animate-pulse bg-gray-500 rounded-lg"></div>
+</ng-template>
