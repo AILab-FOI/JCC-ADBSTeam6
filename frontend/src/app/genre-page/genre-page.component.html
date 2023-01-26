@@ -1,0 +1,21 @@
+<div class="flex flex-col p-10 p-x-20">
+  <div class="flex flex-row overflow-x-auto gap-2 h-14">
+    <div
+      class="bg-blue-600 p-4 rounded-lg cursor-pointer hover:bg-blue-500"
+      [ngClass]="{ 'bg-blue-400': idx === selectedGenre }"
+      *ngFor="let genre of genreList; index as idx"
+      (click)="updateMusicToShow(idx)"
+    >
+      <span class="text-gray-100 font-bold">
+        {{ genre.name }}
+      </span>
+    </div>
+  </div>
+  <app-music-list
+    [musics]="musicToShow"
+    [loading]="loadingMusic"
+    (play)="playOneMusic($event)"
+    class="text-gray-100"
+  >
+  </app-music-list>
+</div>

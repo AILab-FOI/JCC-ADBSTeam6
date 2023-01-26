@@ -1,0 +1,44 @@
+<div
+  class="box-content grid grid-cols-[3rem_1fr] gap-2 rounded-lg p-2 items-center hover:bg-gray-500 w-56 cursor-pointer group"
+>
+  <div
+    [ngClass]="imgColor"
+    class="grid place-items-center rounded-lg w-12 h-12"
+    (click)="playable && playEvent.emit(); $event.stopPropagation()"
+  >
+    <span
+      [ngClass]="playable ? 'group-hover:hidden' : ''"
+      class="font-bold text-3xl text-gray-200"
+    >
+      {{ iconLetter || name[0] | uppercase }}
+    </span>
+    <svg
+      *ngIf="playable"
+      mlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth="{1.5}"
+      stroke="white"
+      class="hidden group-hover:block w-8 h-8 cursor-pointer"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="white"
+        d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+      />
+    </svg>
+  </div>
+  <div
+    class="flex flex-col items-start justify-center p-1 h-full w-full overflow-hidden"
+  >
+    <span class="text-base font-medium">
+      {{ name }}
+    </span>
+    <span
+      class="text-sm font-normal text-ellipsis whitespace-nowrap w-40 overflow-hidden"
+    >
+      {{ description }}
+    </span>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<div class="p-12 text-gray-100">
+  <span class="font-bold text-3xl">
+    {{ artistInfo?.name}}
+  </span>
+  <app-music-list *ngIf="artistInfo" [loading]="loadingMusic" [musics]="artistsMusics">
+
+  </app-music-list>
+</div>

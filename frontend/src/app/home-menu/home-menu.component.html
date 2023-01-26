@@ -1,0 +1,201 @@
+<div class="w-full h-full flex flex-col items-center p-10 p-x-20 gap-8">
+  <div class="relative w-full h-fit">
+    <app-search-bar
+      [isloading]="loadingSearch"
+      (query)="search($event)"
+      class="w-full"
+      placeholder="Search for music, artist, playlist ..."
+    >
+    </app-search-bar>
+    <div
+      *ngIf="searchResult"
+      class="absolute w-full h-fit z-30 top-full mt-3 bg-white rounded-xl"
+    >
+      <div
+        class="py-1 w-full h-fit grid grid-cols-4 text-center [&>span]:w-full overflow-hidden [&>span]:cursor-pointer"
+      >
+        <span
+          (click)="setResultSection(SearchResultTypeEnum.TITLE)"
+          [ngClass]="{
+            'border-solid border-blue-600 border-b-2':
+              resultSection === SearchResultTypeEnum.TITLE
+          }"
+        >
+          Titles ({{ searchResult.titles.length }})
+        </span>
+        <span
+          (click)="setResultSection(SearchResultTypeEnum.ARTISTS)"
+          [ngClass]="{
+            'border-solid border-blue-600 border-b-2':
+              resultSection === SearchResultTypeEnum.ARTISTS
+          }"
+        >
+          Artists ({{ searchResult.artists.length }})
+        </span>
+        <span
+          (click)="setResultSection(SearchResultTypeEnum.PLAYLISTS)"
+          [ngClass]="{
+            'border-solid border-blue-600 border-b-2':
+              resultSection === SearchResultTypeEnum.PLAYLISTS
+          }"
+        >
+          Playlists ({{ searchResult.playlists.length }})
+        </span>
+        <span
+          (click)="setResultSection(SearchResultTypeEnum.USERS)"
+          [ngClass]="{
+            'border-solid border-blue-600 border-b-2':
+              resultSection === SearchResultTypeEnum.USERS
+          }"
+        >
+          Users ({{ searchResult.users.length }})
+        </span>
+      </div>
+      <div
+        class="[&>div]:flex [&>div]:flex-col [&>div>div]:py-1 [&>div>div]:px-2 [&>div>div]:cursor-pointer pb-2 overflow-hidden"
+      >
+        <div *ngIf="resultSection === SearchResultTypeEnum.TITLE">
+          <div
+            *ngFor="let title of searchResult.titles; index as titleIdx"
+            class="justify-between group hover:bg-gray-300 w-full flex flex-row items-center"
+          >
+            <div class="flex flex-row items-center">
+              <div
+                class="grid place-items-center w-7 h-7"
+                (click)="playMusic(title.musicID)"
+              >
+                <span
+                  class="font-bold text-lg text-gray-400 group-hover:hidden"
+                >
+                  {{ titleIdx }}
+                </span>
+                <svg
+                  mlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="{1.5}"
+                  stroke="rgb(156 163 175)"
+                  class="hidden group-hover:inline w-4 h-4 cursor-pointer"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="rgb(156 163 175)"
+                    d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+                  />
+                </svg>
+              </div>
+              <span (click)="redirectToMusic(title.musicID)">
+                {{ title.title }}
+              </span>
+            </div>
+            <span>
+              {{ title.duration | validDuration }}
+            </span>
+          </div>
+          <div *ngIf="searchResult.titles.length === 0">
+            No title have been found ...
+          </div>
+        </div>
+        <div *ngIf="resultSection === SearchResultTypeEnum.ARTISTS">
+          <div
+            *ngFor="let artist of searchResult.artists"
+            (click)="redirectToArtist(artist.artistID)"
+            class="hover:bg-gray-300"
+          >
+            <span>
+              {{ artist.name }}
+            </span>
+          </div>
+          <div *ngIf="searchResult.artists.length === 0">
+            No artist have been found ...
+          </div>
+        </div>
+        <div *ngIf="resultSection === SearchResultTypeEnum.PLAYLISTS">
+          <div
+            *ngFor="let playlist of searchResult.playlists"
+            class="hover:bg-gray-300"
+            (click)="redirectToPlaylist(playlist.playlistID)"
+          >
+            <span>
+              {{ playlist.name }}
+            </span>
+          </div>
+          <div *ngIf="searchResult.playlists.length === 0">
+            No playlist have been found ...
+          </div>
+        </div>
+        <div *ngIf="resultSection === SearchResultTypeEnum.USERS">
+          <div
+            *ngFor="let user of searchResult.users"
+            class="hover:bg-gray-300"
+            (click)="redirectToUser(user.userID)"
+          >
+            <span> {{ user.firstName }} {{ user.lastName }} </span>
+          </div>
+          <div *ngIf="searchResult.users.length === 0">
+            No user have been found ...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="w-full flex flex-col justify-start gap-6 [&>h1]:pb-1 overflow-y-auto max-h-full"
+  >
+    <div class="text-white font-extrabold text-2xl">
+      <h1>Everybody listen to those hits 🔥</h1>
+      <div
+        class="flex flex-row flex-wrap gap-4"
+        *ngIf="hitMusicList.length > 0; else music_skeletons"
+      >
+        <app-card
+          *ngFor="let music of hitMusicList; index as idx"
+          (play)="playMusic(music.musicID)"
+          [imgColor]="'bg-red-600'"
+          (click)="redirectToMusic(music.musicID)"
+          [name]="music.title"
+          [description]="musicsArtistsNames[idx]"
+          [playable]="true"
+        >
+        </app-card>
+      </div>
+    </div>
+    <div class="text-white font-extrabold text-2xl">
+      <h1>Your playlists 🎉</h1>
+      <div
+        class="flex flex-row flex-wrap gap-4"
+        *ngIf="playlistList.length > 0; else playlist_skeletons"
+      >
+        <app-card
+          *ngFor="let playlist of playlistList | noAutoPlaylist"
+          (click)="redirectToPlaylist(playlist.playlistID)"
+          [name]="playlist.name"
+          [description]="playlist.description"
+        >
+        </app-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #playlist_skeletons>
+  <div class="flex flex-row flex-wrap gap-4">
+    <app-skeleton-card></app-skeleton-card>
+    <app-skeleton-card></app-skeleton-card>
+  </div>
+</ng-template>
+
+<ng-template #music_skeletons>
+  <div class="flex flex-row flex-wrap gap-4">
+    <app-skeleton-card></app-skeleton-card>
+    <app-skeleton-card></app-skeleton-card>
+    <app-skeleton-card></app-skeleton-card>
+    <app-skeleton-card></app-skeleton-card>
+    <app-skeleton-card></app-skeleton-card>
+    <app-skeleton-card></app-skeleton-card>
+    <app-skeleton-card></app-skeleton-card>
+    <app-skeleton-card></app-skeleton-card>
+  </div>
+</ng-template>
