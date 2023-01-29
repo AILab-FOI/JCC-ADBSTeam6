@@ -9,9 +9,13 @@ def get_ids(m_list: Sequence[BaseModel]):
 
 
 def sql_insert_into(*args: Sequence[BaseModel]):
+    s = ""
     for m_ls in args:
+        s += f"DELETE FROM {m_ls[0].__class__.__name__};\n"
         for m in m_ls:
-            print(m.insert_sql_sentence())
+            s += m.insert_sql_sentence() + ";\n"
+
+    return s
 
 
 def get_json(**kwargs: Sequence[BaseModel]):
@@ -22,23 +26,46 @@ def get_json(**kwargs: Sequence[BaseModel]):
     return dumps(d)
 
 
+N_USERS = 200
+N_SUBS = int(N_USERS**2/50)
+
+N_MUSICS = 1000
+N_COMMENTS = int(N_MUSICS * N_USERS / 150)
+N_ARTISTS = 100
+N_GENRES = 30
+N_PLAYLISTS = int(N_USERS * 1.25)
+
+N_MUSIC_ARTISTS = int(N_MUSICS * 2.5)
+N_MUSIC_GENRES = int(N_MUSICS * 2.5)
+N_MUSIC_PLAYLISTS = 15 * N_PLAYLISTS
+
 roles = generate_roles(["admin", "user"])
-users = generate_users(3, get_ids(roles))
-subs = generate_subscriptions(2, get_ids(users))
+users = generate_users(N_USERS, get_ids(roles))
+subs = generate_subscriptions(N_USERS, get_ids(users))
 
-musics = generate_music(10, get_ids(users))
-comments = generate_comments(6, get_ids(users), get_ids(musics))
-artists = generate_artists(3)
-genres = generate_genres(2)
-playlists = generate_playlists(5, get_ids(users))
+musics = generate_music(N_MUSICS, get_ids(users))
+comments = generate_comments(
+    N_COMMENTS, get_ids(users), get_ids(musics))
+artists = generate_artists(N_ARTISTS)
+genres = generate_genres(N_GENRES)
+playlists = generate_playlists(N_PLAYLISTS, get_ids(users))
 
-music_artists = generate_music_artists(10, get_ids(musics), get_ids(artists))
-music_genres = generate_music_genre(10, get_ids(musics), get_ids(genres))
+music_artists = generate_music_artists(
+    N_MUSIC_ARTISTS, get_ids(musics), get_ids(artists))
+music_genres = generate_music_genre(
+    N_MUSIC_GENRES, get_ids(musics), get_ids(genres))
 music_playlists = generate_playlist_music(
-    6, get_ids(playlists), get_ids(musics))
+    N_MUSIC_PLAYLISTS, get_ids(playlists), get_ids(musics))
 
-sql_insert_into(roles, users, subs, musics,
-                comments, artists, genres, playlists, music_artists, music_genres, music_playlists)
+pgsql = sql_insert_into(roles, users, subs, musics,
+                        comments, artists, genres, playlists, music_artists, music_genres, music_playlists)
 
-print(get_json(roles=roles, users=users, subscriptions=subs, musics=musics,
-               comments=comments, artists=artists, genres=genres, playlists=playlists, music_artists=music_artists, music_genres=music_genres, music_playlists=music_playlists))
+json_data = get_json(roles=roles, users=users, subscriptions=subs, musics=musics,
+                     comments=comments, artists=artists, genres=genres, playlists=playlists, music_artists=music_artists, music_genres=music_genres, music_playlists=music_playlists)
+
+
+with open("data_pg.sql", "w") as f:
+    f.write(pgsql)
+
+with open("data_json.json", "w") as f:
+    f.write(json_data)

@@ -13,7 +13,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiHandlerService implements IApiHandlerService {
-  readonly BASE_URL = 'http://localhost:3000/api/';
+  readonly BASE_URL = /*environment.BASE_URL ||*/ 'http://localhost:3000/api/';
 
   readonly BASIC_HEADER = {
     'Content-Type': 'application/json',

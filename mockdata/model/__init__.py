@@ -5,7 +5,7 @@ from model.model import BaseModel
 from model.playlists import Playlists
 from model.playlist_music import PlaylistMusic
 from model.music import Music
-from model.music_genre import MusicGenre
+from model.music_genre import MusicGenres
 from model.music_artists import MusicArtists
 from model.genres import Genres
 from model.comments import Comments

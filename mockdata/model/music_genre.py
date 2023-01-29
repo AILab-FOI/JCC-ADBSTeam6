@@ -1,13 +1,13 @@
 from model.model import BaseModel
 
 
-class MusicGenre(BaseModel):
-    Music_musicID: int
-    Genre_genreID: int
+class MusicGenres(BaseModel):
+    musicid: int
+    genreid: int
 
     def __init__(self,
                  Music_musicID: int,
                  Genre_genreID: int):
 
-        self.Music_musicID = Music_musicID
-        self.Genre_genreID = Genre_genreID
+        self.musicid = Music_musicID
+        self.genreid = Genre_genreID

@@ -7,23 +7,19 @@ class Music(BaseModel):
     description: str
     publicationDate: str
     turnOffComments: int
-    link: str
-    # file: str
+    file: str
     duration: str
-    views: int
-    likes: str
-    Users_userID: int
+    userid: int
+    link: str
 
     def __init__(self, musicID: int,
                  title: str,
                  description: str,
                  publicationDate: str,
                  turnOffComments: int,
-                 link: str,
-                 #  file: str,
+                 file: str,
                  duration: str,
-                 views: int,
-                 likes: str,
+                 link: str,
                  Users_userID: int):
 
         self.musicID = musicID
@@ -31,11 +27,9 @@ class Music(BaseModel):
         self.description = description
         self.publicationDate = publicationDate
         self.turnOffComments = turnOffComments
+        self.file = file
         self.link = link
-        # self.file = file
         self.duration = duration
-        self.views = views
-        self.likes = likes
-        self.Users_userID = Users_userID
+        self.userid = Users_userID
 
     def id(self) -> int: return self.musicID

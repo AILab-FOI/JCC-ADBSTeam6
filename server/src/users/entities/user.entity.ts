@@ -19,7 +19,7 @@ import * as bcrypt from 'bcrypt';
 // @Index('users_pkey', ['userid'], { unique: true })
 @Entity('users', { schema: 'public' })
 export class Users {
-  @PrimaryGeneratedColumn({ type: 'integer', name: 'userid' })
+  @PrimaryGeneratedColumn('identity', { type: 'integer', name: 'userid' })
   userid: number;
 
   @Column('character varying', { name: 'username', length: 45 })

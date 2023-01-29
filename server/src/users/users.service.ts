@@ -29,6 +29,7 @@ export class UsersService {
       ...createUserDto,
       role: basicRole,
     });
+    console.log(user);
     await this.usersRepository.save(user);
 
     return toUserDto(user);

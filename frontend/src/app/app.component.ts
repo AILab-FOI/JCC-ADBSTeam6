@@ -38,7 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private currentBlock: number = 0;
   private offsetMoveTime: number = 0;
 
-  private maxBlockToLoad: number = 10 * 10 * 4;
+  private maxBlockToLoad: number = 10 * 2 * 4;
   private eventBusListener: Subscription[] = [];
   private pauseDelay: number = 0;
   private startMusicDate: Date | null = null;
@@ -257,7 +257,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const audioSource = this.audioSourceBuffer[0];
 
     if (!audioSource) {
-      if (this.musicIdQueue.length - 1 >= this.currentMusicIdx) {
+      if (this.currentMusicIdx < this.musicIdQueue.length - 1) {
         this.loadNextMusic();
       } else this.musicPlaying = false;
       return;

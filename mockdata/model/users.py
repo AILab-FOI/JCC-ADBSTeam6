@@ -8,7 +8,7 @@ class Users(BaseModel):
     email: str
     firstName: str
     lastName: str
-    Roles_roleID: int
+    roleid: int
 
     def __init__(self,
                  userID: int,
@@ -25,6 +25,6 @@ class Users(BaseModel):
         self.email = email
         self.firstName = firstName
         self.lastName = lastName
-        self.Roles_roleID = Roles_roleID
+        self.roleid = Roles_roleID
 
     def id(self) -> int: return self.userID

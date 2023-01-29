@@ -282,14 +282,21 @@ export class MusicService {
       start = mp3Parser.readFrame(dataView, i);
     }
 
-    for (let j = 0; j < blockNumber; j++) {
+    for (
+      let j = 0;
+      j < blockNumber &&
+      mp3Parser.readFrame(dataView, start._section.nextFrameIndex);
+      j++
+    ) {
       start = mp3Parser.readFrame(dataView, start._section.nextFrameIndex);
     }
 
     let end = start;
     for (
       let j = 0;
-      j < NBlocks && mp3Parser.readFrame(dataView, end._section.nextFrameIndex);
+      j < NBlocks &&
+      mp3Parser.readFrame(dataView, end._section.nextFrameIndex) &&
+      end;
       j++
     ) {
       end = mp3Parser.readFrame(dataView, end._section.nextFrameIndex);

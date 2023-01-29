@@ -5,7 +5,7 @@ class Playlists(BaseModel):
     playlistID: int
     name: str
     description: str
-    Users_userID: int
+    userid: int
 
     def __init__(self, playlistID: int,
                  name: str,
@@ -15,6 +15,6 @@ class Playlists(BaseModel):
         self.playlistID = playlistID
         self.name = name
         self.description = description
-        self.Users_userID = Users_userID
+        self.userid = Users_userID
 
     def id(self) -> int: return self.playlistID

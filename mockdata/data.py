@@ -198,3 +198,8 @@ lastnames = ["Simmins",
              "Friday",
              "Lowy",
              "Facer"]
+
+musicfiles = list(map(lambda s: "/home/emilien/Documents/Ecole_ingenieur/UNIZA/advanced_database_systems/project/main/server/audio-data/" + s,
+                  ['gs-16b-2c-44100hz.mp3',
+                   'Kalimba.mp3',
+                   'Free_Test_Data_1MB_MP3.mp3']))

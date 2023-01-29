@@ -91,6 +91,7 @@ export class MusicPageComponent implements OnInit, OnDestroy {
     }
 
     this.updateIsLike();
+    await this.loadNextComments();
   }
 
   async loadNextComments() {

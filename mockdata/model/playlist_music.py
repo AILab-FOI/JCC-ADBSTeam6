@@ -2,15 +2,15 @@ from model.model import BaseModel
 
 
 class PlaylistMusic(BaseModel):
-    Playlists_playlistID: int
-    Music_musicID: int
-    order: int
+    playlistid: int
+    musicid: int
+    ordered: int
 
     def __init__(self,
                  Playlists_playlistID: int,
                  Music_musicID: int,
-                 order: int):
+                 ordered: int):
 
-        self.Playlists_playlistID = Playlists_playlistID
-        self.Music_musicID = Music_musicID
-        self.order = order
+        self.playlistid = Playlists_playlistID
+        self.musicid = Music_musicID
+        self.ordered = ordered

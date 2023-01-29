@@ -34,7 +34,7 @@ def generate_data(N: int, spec: SpecificationDict, new_class: Type[T]) -> List[T
 
 
 def generate_users(N: int, roles_id: List[int]) -> List[m.Users]:
-    id = [0]
+    id = [100]
 
     def next_id(ref: List[int]) -> Callable[[], int]:
         def f() -> int:
@@ -101,7 +101,7 @@ def generate_roles(role_names: List[str]) -> List[m.Roles]:
 
 
 def generate_playlists(N: int, users_id: List[int]) -> List[m.Playlists]:
-    id = [0]
+    id = [len(users_id) * 5]
 
     def next_id(ref: List[int]) -> Callable[[], int]:
         def f() -> int:
@@ -126,7 +126,7 @@ def generate_playlists(N: int, users_id: List[int]) -> List[m.Playlists]:
 
 
 def generate_comments(N: int, users_id: List[int], musics_id: List[int]) -> List[m.Comments]:
-    id = [0]
+    id = [100]
 
     def next_id(ref: List[int]) -> Callable[[], int]:
         def f() -> int:
@@ -199,17 +199,17 @@ def generate_genres(N: int) -> List[m.Genres]:
     return generate_data(N, spec, m.Genres)
 
 
-def generate_music_genre(N: int, musics_id: List[int], genres_id: List[int]) -> List[m.MusicGenre]:
+def generate_music_genre(N: int, musics_id: List[int], genres_id: List[int]) -> List[m.MusicGenres]:
     spec = SpecificationDict({
         "Music_musicID": choice_wrapper(musics_id),
         "Genre_genreID": choice_wrapper(genres_id)
     })
 
-    return generate_data(N, spec, m.MusicGenre)
+    return generate_data(N, spec, m.MusicGenres)
 
 
 def generate_music(N: int, users_id: List[int]) -> List[m.Music]:
-    id = [0]
+    id = [100]
 
     def next_id(ref: List[int]) -> Callable[[], int]:
         def f() -> int:
@@ -241,19 +241,20 @@ def generate_music(N: int, users_id: List[int]) -> List[m.Music]:
         month = randint(1, 12)
         year = randint(1980, 2021)
 
-        return f"{month}-{day}-{year}"
+        return f"{year}-{month}-{day}"
+
+    f = choice(musicfiles)
 
     spec = SpecificationDict({
         "musicID": next_id(id),
         "title":  rdm_str(10),
-        "description": rdm_str(50),
+        "description": lambda: f"From file: {f}",
         "Users_userID": choice_wrapper(users_id),
-        "link": lambda: "www.google.com/search?q=" + rdm_str(10)(),
-        "views": rdm_int,
+        "file": lambda: f,
+        "link": lambda: "",
         "duration": rdm_music_time,
         "publicationDate": random_date,
         "turnOffComments": lambda: 0,
-        "likes": lambda: "?",
     })
 
     return generate_data(N, spec, m.Music)
@@ -285,7 +286,7 @@ def generate_playlist_music(N: int, playlists_id: List[int], musics_id: List[int
 
     spec = SpecificationDict({
         "Playlists_playlistID": next_playlist_id(index_playlist),
-        "order": next_order(index_order),
+        "ordered": next_order(index_order),
         "Music_musicID": choice_wrapper(musics_id)
     })
 
